@@ -1,4 +1,7 @@
+import useDocumentTitle from '@/hooks/useDocumentTitle'
+
 const Profile = () => {
+  useDocumentTitle({ title: 'Thông tin cá nhân - ITM System' })
   return (
     <div className='bg-muted/50 py-8'>
       <div className='container mx-auto'>
@@ -82,7 +85,7 @@ const Profile = () => {
                       <label className='text-sm font-medium text-foreground'>Email</label>
                     </div>
                     <div className='sm:col-span-3'>
-                      <div className='text-sm text-muted-foreground'>d***c@gmail.com</div>
+                      <div className='text-sm text-muted-foreground'>huy***@gmail.com</div>
                     </div>
                   </div>
 
@@ -93,7 +96,7 @@ const Profile = () => {
                     <div className='sm:col-span-3'>
                       <input
                         className='w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                        defaultValue='Dư Thanh Dược'
+                        defaultValue='Lê Quang Huy'
                       />
                     </div>
                   </div>

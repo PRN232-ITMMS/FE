@@ -21,5 +21,5 @@ fi
 echo "✅ Branch name OK"
 echo "✅ Running lint..."
 
-pnpm lint
+pnpm lint:fix
 pnpm format
