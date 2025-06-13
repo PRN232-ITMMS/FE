@@ -19,10 +19,14 @@ export const useAuthStore = create<AuthState>()(
         profile: getProfileFromLocalStorage(),
         setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
         setProfile: (profile) => set({ profile }),
-        logout: () => set({ isAuthenticated: false, profile: null }),
+        logout: () => {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('profile')
+          set({ isAuthenticated: false, profile: null })
+        },
       }),
       {
-        name: 'auth-storage',
+        name: 'itm-auth-storage',
         partialize: (state) => ({
           isAuthenticated: state.isAuthenticated,
           profile: state.profile,
@@ -30,7 +34,7 @@ export const useAuthStore = create<AuthState>()(
       }
     ),
     {
-      name: 'auth-store',
+      name: 'itm-auth-store',
     }
   )
 )
