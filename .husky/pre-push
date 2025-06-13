@@ -1,0 +1,15 @@
+#!/bin/sh
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$branch" = "main" ]; then
+  echo "Không được push trực tiếp vào branch main!"
+  exit 1
+fi
+
+if ! echo "$branch" | grep -Eq "^(feature/[a-z0-9-]+|bugfix/[a-z0-9-]+|hotfix/[a-z0-9-]+|test/[a-z0-9-]+)$"; then
+  echo "Tên branch không hợp lệ! Phải theo mẫu: feature/[name], bugfix/[name], hotfix/[name], test/[name]"
+  exit 1
+fi
+
+exit 0
