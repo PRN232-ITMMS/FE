@@ -7,6 +7,7 @@ import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import Profile from '@/pages/Profile'
 import Home from '@/pages/Home'
+import Dashboard from '@/pages/Dashboard'
 
 export const ProtectedRoutes = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -40,6 +41,10 @@ export const useRouteElements = () => {
               <Profile />
             </MainLayout>
           ),
+        },
+        {
+          path: path.dashboard,
+          element: <Dashboard />,
         },
       ],
     },
