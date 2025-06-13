@@ -17,7 +17,7 @@ export interface LoginRequest {
   password: string
 }
 
-// Register request  
+// Register request
 export interface RegisterRequest {
   email: string
   password: string

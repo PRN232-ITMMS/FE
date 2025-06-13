@@ -53,9 +53,10 @@ const Footer = () => {
                 <span className='text-sm text-muted-foreground'>support@itm-system.vn</span>
               </div>
               <div className='flex items-start space-x-2'>
-                <MapPin className='h-4 w-4 text-primary mt-0.5' />
+                <MapPin className='mt-0.5 h-4 w-4 text-primary' />
                 <span className='text-sm text-muted-foreground'>
-                  123 Đường Y Khoa, Phường Tân Định,<br />
+                  123 Đường Y Khoa, Phường Tân Định,
+                  <br />
                   Quận 1, TP. Hồ Chí Minh
                 </span>
               </div>
@@ -67,7 +68,7 @@ const Footer = () => {
             <h3 className='text-sm font-semibold text-foreground'>Giờ làm việc</h3>
             <div className='space-y-3'>
               <div className='flex items-start space-x-2'>
-                <Clock className='h-4 w-4 text-primary mt-0.5' />
+                <Clock className='mt-0.5 h-4 w-4 text-primary' />
                 <div className='text-sm text-muted-foreground'>
                   <div>Thứ 2 - Thứ 6: 7:30 - 17:30</div>
                   <div>Thứ 7: 7:30 - 12:00</div>
@@ -88,7 +89,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className='mt-12 border-t pt-8'>
-          <div className='flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0'>
+          <div className='flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0'>
             <p className='text-sm text-muted-foreground'>
               © 2025 ITM System - Hệ thống Quản lý Điều trị Hiếm muộn. Tất cả quyền được bảo lưu.
             </p>

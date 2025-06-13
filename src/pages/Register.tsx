@@ -17,9 +17,9 @@ import { Controller } from 'react-hook-form'
 import useDocumentTitle from '@/hooks/useDocumentTitle'
 
 const Register = () => {
-  const navigate = useNavigate() 
+  const navigate = useNavigate()
   const { toast } = useToast()
-  
+
   useDocumentTitle({ title: 'Đăng ký tài khoản - ITM System' })
 
   const {
@@ -32,7 +32,7 @@ const Register = () => {
     defaultValues: {
       role: UserRole.Customer,
       gender: Gender.Female,
-    }
+    },
   })
 
   const registerMutation = useMutation({
@@ -86,14 +86,14 @@ const Register = () => {
             {/* Thông tin đăng nhập */}
             <div className='space-y-4'>
               <h3 className='text-lg font-medium'>Thông tin đăng nhập</h3>
-              
+
               <div className='space-y-2'>
                 <Label htmlFor='email'>Địa chỉ Email *</Label>
-                <Input 
-                  id='email' 
-                  type='email' 
-                  placeholder='benhnhan@example.com' 
-                  {...register('email')} 
+                <Input
+                  id='email'
+                  type='email'
+                  placeholder='benhnhan@example.com'
+                  {...register('email')}
                   className='h-11'
                 />
                 {errors.email?.message && <p className='text-sm text-destructive'>{errors.email.message}</p>}
@@ -101,11 +101,11 @@ const Register = () => {
 
               <div className='space-y-2'>
                 <Label htmlFor='password'>Mật khẩu *</Label>
-                <Input 
-                  id='password' 
-                  type='password' 
-                  placeholder='Tạo mật khẩu mạnh (tối thiểu 6 ký tự)' 
-                  {...register('password')} 
+                <Input
+                  id='password'
+                  type='password'
+                  placeholder='Tạo mật khẩu mạnh (tối thiểu 6 ký tự)'
+                  {...register('password')}
                   className='h-11'
                 />
                 {errors.password?.message && <p className='text-sm text-destructive'>{errors.password.message}</p>}
@@ -115,30 +115,32 @@ const Register = () => {
             {/* Thông tin cá nhân */}
             <div className='space-y-4'>
               <h3 className='text-lg font-medium'>Thông tin cá nhân</h3>
-              
+
               <div className='space-y-2'>
                 <Label htmlFor='fullName'>Họ và tên *</Label>
-                <Input 
-                  id='fullName' 
-                  type='text' 
-                  placeholder='Nguyễn Văn A' 
-                  {...register('fullName')} 
+                <Input
+                  id='fullName'
+                  type='text'
+                  placeholder='Nguyễn Văn A'
+                  {...register('fullName')}
                   className='h-11'
                 />
                 {errors.fullName?.message && <p className='text-sm text-destructive'>{errors.fullName.message}</p>}
               </div>
 
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                 <div className='space-y-2'>
                   <Label htmlFor='phoneNumber'>Số điện thoại</Label>
-                  <Input 
-                    id='phoneNumber' 
-                    type='tel' 
-                    placeholder='0123456789' 
-                    {...register('phoneNumber')} 
+                  <Input
+                    id='phoneNumber'
+                    type='tel'
+                    placeholder='0123456789'
+                    {...register('phoneNumber')}
                     className='h-11'
                   />
-                  {errors.phoneNumber?.message && <p className='text-sm text-destructive'>{errors.phoneNumber.message}</p>}
+                  {errors.phoneNumber?.message && (
+                    <p className='text-sm text-destructive'>{errors.phoneNumber.message}</p>
+                  )}
                 </div>
 
                 <div className='space-y-2'>
@@ -147,7 +149,10 @@ const Register = () => {
                     name='gender'
                     control={control}
                     render={({ field }) => (
-                      <Select onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
+                      <Select
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        defaultValue={field.value?.toString()}
+                      >
                         <SelectTrigger className='h-11'>
                           <SelectValue placeholder='Chọn giới tính' />
                         </SelectTrigger>
@@ -166,82 +171,82 @@ const Register = () => {
             {/* Thông tin bổ sung cho bệnh nhân */}
             <div className='space-y-4'>
               <h3 className='text-lg font-medium'>Thông tin bổ sung</h3>
-              
+
               <div className='space-y-2'>
                 <Label htmlFor='address'>Địa chỉ</Label>
-                <Input 
-                  id='address' 
-                  type='text' 
-                  placeholder='123 Đường ABC, Quận XYZ, TP.HCM' 
-                  {...register('address')} 
+                <Input
+                  id='address'
+                  type='text'
+                  placeholder='123 Đường ABC, Quận XYZ, TP.HCM'
+                  {...register('address')}
                   className='h-11'
                 />
               </div>
 
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                 <div className='space-y-2'>
                   <Label htmlFor='maritalStatus'>Tình trạng hôn nhân</Label>
-                  <Input 
-                    id='maritalStatus' 
-                    type='text' 
-                    placeholder='Đã kết hôn' 
-                    {...register('maritalStatus')} 
+                  <Input
+                    id='maritalStatus'
+                    type='text'
+                    placeholder='Đã kết hôn'
+                    {...register('maritalStatus')}
                     className='h-11'
                   />
                 </div>
 
                 <div className='space-y-2'>
                   <Label htmlFor='occupation'>Nghề nghiệp</Label>
-                  <Input 
-                    id='occupation' 
-                    type='text' 
-                    placeholder='Kỹ sư, Giáo viên, ...' 
-                    {...register('occupation')} 
+                  <Input
+                    id='occupation'
+                    type='text'
+                    placeholder='Kỹ sư, Giáo viên, ...'
+                    {...register('occupation')}
                     className='h-11'
                   />
                 </div>
               </div>
 
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                 <div className='space-y-2'>
                   <Label htmlFor='emergencyContactName'>Người liên hệ khẩn cấp</Label>
-                  <Input 
-                    id='emergencyContactName' 
-                    type='text' 
-                    placeholder='Tên người thân' 
-                    {...register('emergencyContactName')} 
+                  <Input
+                    id='emergencyContactName'
+                    type='text'
+                    placeholder='Tên người thân'
+                    {...register('emergencyContactName')}
                     className='h-11'
                   />
                 </div>
 
                 <div className='space-y-2'>
                   <Label htmlFor='emergencyContactPhone'>SĐT người liên hệ khẩn cấp</Label>
-                  <Input 
-                    id='emergencyContactPhone' 
-                    type='tel' 
-                    placeholder='0987654321' 
-                    {...register('emergencyContactPhone')} 
+                  <Input
+                    id='emergencyContactPhone'
+                    type='tel'
+                    placeholder='0987654321'
+                    {...register('emergencyContactPhone')}
                     className='h-11'
                   />
                 </div>
               </div>
             </div>
 
-            <Button type='submit' className='w-full h-11' disabled={registerMutation.isPending}>
+            <Button type='submit' className='h-11 w-full' disabled={registerMutation.isPending}>
               {registerMutation.isPending ? 'Đang đăng ký...' : 'Đăng ký tài khoản'}
             </Button>
           </form>
 
           <div className='text-center text-sm'>
             <span className='text-muted-foreground'>Đã có tài khoản? </span>
-            <Link to='/login' className='text-primary hover:underline font-medium'>
+            <Link to='/login' className='font-medium text-primary hover:underline'>
               Đăng nhập ngay
             </Link>
           </div>
-          
+
           <div className='text-center'>
             <p className='text-xs text-muted-foreground'>
-              <Heart className='inline h-3 w-3 mr-1' />
+              <Heart className='mr-1 inline h-3 w-3' />
               Thông tin của bạn sẽ được bảo mật tuyệt đối
             </p>
           </div>

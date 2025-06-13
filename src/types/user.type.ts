@@ -3,14 +3,14 @@ export enum UserRole {
   Customer = 1,
   Doctor = 2,
   Manager = 3,
-  Admin = 4
+  Admin = 4,
 }
 
 // Gender enum
 export enum Gender {
   Male = 1,
   Female = 2,
-  Other = 3
+  Other = 3,
 }
 
 // User profile from backend

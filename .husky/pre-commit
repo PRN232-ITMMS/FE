@@ -23,3 +23,4 @@ echo "✅ Running lint..."
 
 pnpm lint:fix
 pnpm format
+pnpm build

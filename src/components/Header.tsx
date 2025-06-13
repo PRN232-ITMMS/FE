@@ -37,24 +37,24 @@ const Header = () => {
 
           {/* Navigation Menu (for authenticated users) */}
           {isAuthenticated && (
-            <div className='hidden md:flex items-center space-x-6'>
-              <Link 
-                to='/dashboard' 
-                className='flex items-center space-x-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'
+            <div className='hidden items-center space-x-6 md:flex'>
+              <Link
+                to='/dashboard'
+                className='flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground'
               >
                 <Activity className='h-4 w-4' />
                 <span>Tổng quan</span>
               </Link>
-              <Link 
-                to='/appointments' 
-                className='flex items-center space-x-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'
+              <Link
+                to='/appointments'
+                className='flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground'
               >
                 <Calendar className='h-4 w-4' />
                 <span>Lịch hẹn</span>
               </Link>
-              <Link 
-                to='/treatments' 
-                className='flex items-center space-x-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'
+              <Link
+                to='/treatments'
+                className='flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground'
               >
                 <FileText className='h-4 w-4' />
                 <span>Điều trị</span>
@@ -78,9 +78,13 @@ const Header = () => {
                     <div className='flex flex-col items-start'>
                       <span className='text-sm font-medium'>{profile.fullName}</span>
                       <span className='text-xs text-muted-foreground'>
-                        {profile.role === 1 ? 'Bệnh nhân' : 
-                         profile.role === 2 ? 'Bác sĩ' :
-                         profile.role === 3 ? 'Quản lý' : 'Quản trị viên'}
+                        {profile.role === 1
+                          ? 'Bệnh nhân'
+                          : profile.role === 2
+                            ? 'Bác sĩ'
+                            : profile.role === 3
+                              ? 'Quản lý'
+                              : 'Quản trị viên'}
                       </span>
                     </div>
                   </Button>
