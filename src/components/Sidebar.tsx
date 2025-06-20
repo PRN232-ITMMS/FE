@@ -220,8 +220,12 @@ const Sidebar = ({ className }: SidebarProps) => {
       {/* User Info */}
       <div className='border-t p-4'>
         <div className='flex items-center space-x-3'>
-          <div className='flex h-8 w-8 items-center justify-center rounded-full bg-primary/10'>
-            <Users className='h-4 w-4 text-primary' />
+          <div className='h-8 w-8 flex-shrink-0'>
+            <img
+              src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${profile?.email}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
+              alt='Avatar'
+              className='h-full w-full rounded-full bg-gray-100 object-cover'
+            />
           </div>
           <div className='min-w-0 flex-1'>
             <div className='truncate text-sm font-medium'>{profile?.fullName}</div>
