@@ -1,6 +1,6 @@
 import { AuthResponse, LoginRequest, RegisterRequest, RefreshTokenRequest, RegisterResponse } from '@/types/auth.type'
 import { User } from '@/types/user.type'
-import http from '@/utils/http'
+import http from '@/lib/http'
 
 const authAPI = {
   // Register new account
