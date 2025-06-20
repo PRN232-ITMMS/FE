@@ -132,16 +132,10 @@ export const MedicalDocuments = ({ onUpdate }: MedicalDocumentsProps) => {
       <div className='flex items-center justify-between'>
         <div>
           <h3 className='text-lg font-semibold'>Tài liệu y tế</h3>
-          <p className='text-sm text-muted-foreground'>
-            Tải lên và quản lý các tài liệu y tế, kết quả xét nghiệm
-          </p>
+          <p className='text-sm text-muted-foreground'>Tải lên và quản lý các tài liệu y tế, kết quả xét nghiệm</p>
         </div>
-        <Button 
-          onClick={() => fileInputRef.current?.click()} 
-          size='sm'
-          disabled={uploadMutation.isPending}
-        >
-          <Plus className='h-4 w-4 mr-2' />
+        <Button onClick={() => fileInputRef.current?.click()} size='sm' disabled={uploadMutation.isPending}>
+          <Plus className='mr-2 h-4 w-4' />
           Tải lên
         </Button>
       </div>
@@ -157,14 +151,12 @@ export const MedicalDocuments = ({ onUpdate }: MedicalDocumentsProps) => {
 
       {/* Upload Form */}
       {isUploading && (
-        <div className='rounded-lg border p-4 space-y-4'>
+        <div className='space-y-4 rounded-lg border p-4'>
           <h4 className='font-medium'>Tải lên tài liệu mới</h4>
           <div className='space-y-4'>
             <div>
               <Label>File đã chọn</Label>
-              <p className='text-sm text-muted-foreground'>
-                {fileInputRef.current?.files?.[0]?.name}
-              </p>
+              <p className='text-sm text-muted-foreground'>{fileInputRef.current?.files?.[0]?.name}</p>
             </div>
 
             <div className='space-y-2'>
@@ -179,15 +171,12 @@ export const MedicalDocuments = ({ onUpdate }: MedicalDocumentsProps) => {
             </div>
 
             <div className='flex space-x-2'>
-              <Button 
-                onClick={handleUpload} 
-                disabled={uploadMutation.isPending}
-              >
-                <Upload className='h-4 w-4 mr-2' />
+              <Button onClick={handleUpload} disabled={uploadMutation.isPending}>
+                <Upload className='mr-2 h-4 w-4' />
                 {uploadMutation.isPending ? 'Đang tải lên...' : 'Tải lên'}
               </Button>
-              <Button 
-                variant='outline' 
+              <Button
+                variant='outline'
                 onClick={() => {
                   setIsUploading(false)
                   setDescription('')
@@ -206,8 +195,8 @@ export const MedicalDocuments = ({ onUpdate }: MedicalDocumentsProps) => {
       {/* Documents List */}
       <div className='space-y-3'>
         {documents.length === 0 ? (
-          <div className='text-center py-8 text-muted-foreground'>
-            <Upload className='h-12 w-12 mx-auto mb-4 opacity-50' />
+          <div className='py-8 text-center text-muted-foreground'>
+            <Upload className='mx-auto mb-4 h-12 w-12 opacity-50' />
             <p>Chưa có tài liệu nào</p>
             <p className='text-sm'>Nhấn "Tải lên" để thêm tài liệu mới</p>
           </div>
@@ -219,17 +208,15 @@ export const MedicalDocuments = ({ onUpdate }: MedicalDocumentsProps) => {
                   {getFileIcon(doc.fileType)}
                   <div className='flex-1'>
                     <h4 className='font-medium'>{doc.fileName}</h4>
-                    {doc.description && (
-                      <p className='text-sm text-muted-foreground mt-1'>{doc.description}</p>
-                    )}
-                    <div className='flex items-center space-x-4 mt-2 text-xs text-muted-foreground'>
+                    {doc.description && <p className='mt-1 text-sm text-muted-foreground'>{doc.description}</p>}
+                    <div className='mt-2 flex items-center space-x-4 text-xs text-muted-foreground'>
                       <span>Loại: {doc.fileType}</span>
-                      <span>Tải lên: {new Date(doc.uploadDate).toLocaleDateString('vi-VN')}</span>
+                      <span>Tải lên: {new Date(doc.uploadedAt).toLocaleDateString('vi-VN')}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className='flex space-x-1 ml-4'>
+                <div className='ml-4 flex space-x-1'>
                   <Button
                     size='sm'
                     variant='ghost'
@@ -269,8 +256,8 @@ export const MedicalDocuments = ({ onUpdate }: MedicalDocumentsProps) => {
 
       {/* Upload Guidelines */}
       <div className='rounded-lg bg-muted/50 p-4'>
-        <h4 className='font-medium mb-2'>Hướng dẫn tải lên</h4>
-        <ul className='text-sm text-muted-foreground space-y-1'>
+        <h4 className='mb-2 font-medium'>Hướng dẫn tải lên</h4>
+        <ul className='space-y-1 text-sm text-muted-foreground'>
           <li>• Chỉ chấp nhận file PDF, JPG, PNG</li>
           <li>• Kích thước tối đa: 10MB</li>
           <li>• Nên đặt tên file có ý nghĩa</li>

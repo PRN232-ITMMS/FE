@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { DatePicker } from '@/components/ui/date-picker'
 import { medicalHistoryApi } from '@/apis/medical.api'
 import { MedicalHistory, MedicalHistoryFormData } from '@/types/medical.type'
 import { useAuthStore } from '@/stores/auth.store'
@@ -17,12 +16,9 @@ import { useToast } from '@/hooks/use-toast'
 // Validation schema
 const medicalHistorySchema = yup.object({
   condition: yup.string().required('Tình trạng bệnh lý là bắt buộc'),
-  description: yup.string().optional(),
-  diagnosisDate: yup.date().optional().transform((value, originalValue) => {
-    return originalValue === '' ? undefined : value
-  }),
+  diagnosisDate: yup.string().optional(),
   treatment: yup.string().optional(),
-  isActive: yup.boolean().default(true),
+  notes: yup.string().optional(),
 })
 
 interface MedicalHistoryFormProps {
@@ -42,20 +38,16 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
     handleSubmit,
     reset,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<MedicalHistoryFormData>({
     resolver: yupResolver(medicalHistorySchema) as any,
     defaultValues: {
       condition: '',
-      description: '',
-      diagnosisDate: undefined,
+      diagnosisDate: '',
       treatment: '',
-      isActive: true,
+      notes: '',
     },
   })
-
-  const diagnosisDate = watch('diagnosisDate')
 
   // Create mutation
   const createMutation = useMutation({
@@ -63,10 +55,10 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
       medicalHistoryApi.create({
         userId: profile!.id,
         condition: data.condition,
-        description: data.description || '',
-        diagnosisDate: data.diagnosisDate,
+        diagnosisDate: data.diagnosisDate || '',
         treatment: data.treatment || '',
-        isActive: data.isActive,
+        notes: data.notes || '',
+        isActive: true,
       }),
     onSuccess: () => {
       toast({
@@ -90,8 +82,7 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
 
   // Update mutation
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<MedicalHistory> }) =>
-      medicalHistoryApi.update(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Partial<MedicalHistory> }) => medicalHistoryApi.update(id, data),
     onSuccess: () => {
       toast({
         title: 'Thành công',
@@ -138,10 +129,9 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
         id: editingId,
         data: {
           condition: data.condition,
-          description: data.description,
           diagnosisDate: data.diagnosisDate,
           treatment: data.treatment,
-          isActive: data.isActive,
+          notes: data.notes,
         },
       })
     } else {
@@ -152,10 +142,9 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
   const startEdit = (item: MedicalHistory) => {
     setEditingId(item.id!)
     setValue('condition', item.condition)
-    setValue('description', item.description || '')
-    setValue('diagnosisDate', item.diagnosisDate ? new Date(item.diagnosisDate) : undefined)
+    setValue('diagnosisDate', item.diagnosisDate || '')
     setValue('treatment', item.treatment || '')
-    setValue('isActive', item.isActive)
+    setValue('notes', item.notes || '')
     setIsAdding(true)
   }
 
@@ -180,7 +169,7 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
         </div>
         {!isAdding && (
           <Button onClick={() => setIsAdding(true)} size='sm'>
-            <Plus className='h-4 w-4 mr-2' />
+            <Plus className='mr-2 h-4 w-4' />
             Thêm mới
           </Button>
         )}
@@ -188,12 +177,10 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
 
       {/* Add/Edit Form */}
       {isAdding && (
-        <div className='rounded-lg border p-4 space-y-4'>
-          <h4 className='font-medium'>
-            {editingId ? 'Chỉnh sửa tiền sử bệnh lý' : 'Thêm tiền sử bệnh lý mới'}
-          </h4>
+        <div className='space-y-4 rounded-lg border p-4'>
+          <h4 className='font-medium'>{editingId ? 'Chỉnh sửa tiền sử bệnh lý' : 'Thêm tiền sử bệnh lý mới'}</h4>
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <div className='space-y-2'>
                 <Label htmlFor='condition'>Tình trạng bệnh lý *</Label>
                 <Input
@@ -201,57 +188,37 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
                   placeholder='Ví dụ: Đau lưng mãn tính, Cao huyết áp...'
                   {...register('condition')}
                 />
-                {errors.condition && (
-                  <p className='text-sm text-destructive'>{errors.condition.message}</p>
-                )}
+                {errors.condition && <p className='text-sm text-destructive'>{errors.condition.message}</p>}
               </div>
 
               <div className='space-y-2'>
                 <Label htmlFor='diagnosisDate'>Ngày chẩn đoán</Label>
-                <DatePicker
-                  value={diagnosisDate}
-                  onChange={(date) => setValue('diagnosisDate', date)}
-                  placeholder='Chọn ngày chẩn đoán'
-                />
+                <Input id='diagnosisDate' type='date' {...register('diagnosisDate')} />
               </div>
             </div>
 
             <div className='space-y-2'>
-              <Label htmlFor='description'>Mô tả chi tiết</Label>
+              <Label htmlFor='notes'>Ghi chú</Label>
               <Textarea
-                id='description'
-                placeholder='Mô tả triệu chứng, nguyên nhân, diễn biến...'
+                id='notes'
+                placeholder='Ghi chú thêm về tình trạng bệnh lý...'
                 rows={3}
-                {...register('description')}
+                {...register('notes')}
               />
             </div>
 
             <div className='space-y-2'>
               <Label htmlFor='treatment'>Phương pháp điều trị đã áp dụng</Label>
-              <Input
-                id='treatment'
-                placeholder='Thuốc, phẫu thuật, vật lý trị liệu...'
-                {...register('treatment')}
-              />
-            </div>
-
-            <div className='flex items-center space-x-2'>
-              <input
-                type='checkbox'
-                id='isActive'
-                className='rounded border-gray-300'
-                {...register('isActive')}
-              />
-              <Label htmlFor='isActive'>Tình trạng hiện tại (vẫn đang điều trị)</Label>
+              <Input id='treatment' placeholder='Thuốc, phẫu thuật, vật lý trị liệu...' {...register('treatment')} />
             </div>
 
             <div className='flex space-x-2'>
               <Button type='submit' disabled={isSubmitting}>
-                <Save className='h-4 w-4 mr-2' />
+                <Save className='mr-2 h-4 w-4' />
                 {editingId ? 'Cập nhật' : 'Thêm mới'}
               </Button>
               <Button type='button' variant='outline' onClick={cancelEdit}>
-                <X className='h-4 w-4 mr-2' />
+                <X className='mr-2 h-4 w-4' />
                 Hủy
               </Button>
             </div>
@@ -262,8 +229,8 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
       {/* Medical History List */}
       <div className='space-y-3'>
         {medicalHistory.length === 0 ? (
-          <div className='text-center py-8 text-muted-foreground'>
-            <Calendar className='h-12 w-12 mx-auto mb-4 opacity-50' />
+          <div className='py-8 text-center text-muted-foreground'>
+            <Calendar className='mx-auto mb-4 h-12 w-12 opacity-50' />
             <p>Chưa có thông tin tiền sử bệnh lý nào</p>
             <p className='text-sm'>Nhấn "Thêm mới" để bắt đầu</p>
           </div>
@@ -272,25 +239,23 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
             <div key={item.id} className='rounded-lg border p-4'>
               <div className='flex items-start justify-between'>
                 <div className='flex-1'>
-                  <div className='flex items-center space-x-2 mb-2'>
+                  <div className='mb-2 flex items-center space-x-2'>
                     <h4 className='font-medium'>{item.condition}</h4>
                     {item.isActive && (
-                      <span className='px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full'>
+                      <span className='rounded-full bg-orange-100 px-2 py-1 text-xs text-orange-800'>
                         Đang điều trị
                       </span>
                     )}
                   </div>
-                  
+
                   {item.diagnosisDate && (
-                    <p className='text-sm text-muted-foreground mb-1'>
+                    <p className='mb-1 text-sm text-muted-foreground'>
                       Chẩn đoán: {new Date(item.diagnosisDate).toLocaleDateString('vi-VN')}
                     </p>
                   )}
-                  
-                  {item.description && (
-                    <p className='text-sm text-muted-foreground mb-2'>{item.description}</p>
-                  )}
-                  
+
+                  {item.notes && <p className='mb-2 text-sm text-muted-foreground'>{item.notes}</p>}
+
                   {item.treatment && (
                     <p className='text-sm'>
                       <span className='font-medium'>Điều trị:</span> {item.treatment}
@@ -298,13 +263,8 @@ export const MedicalHistoryForm = ({ medicalHistory, onUpdate }: MedicalHistoryF
                   )}
                 </div>
 
-                <div className='flex space-x-1 ml-4'>
-                  <Button
-                    size='sm'
-                    variant='ghost'
-                    onClick={() => startEdit(item)}
-                    disabled={isAdding}
-                  >
+                <div className='ml-4 flex space-x-1'>
+                  <Button size='sm' variant='ghost' onClick={() => startEdit(item)} disabled={isAdding}>
                     <Edit3 className='h-4 w-4' />
                   </Button>
                   <Button

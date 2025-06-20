@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { User } from '@/types/user.type'
-import { getAccessTokenFromLocalStorage, getProfileFromLocalStorage } from '@/utils/auth'
+import { clearAllLocalStorage, getAccessTokenFromLocalStorage, getProfileFromLocalStorage } from '@/utils/auth'
 
 interface AuthState {
   isAuthenticated: boolean
@@ -20,8 +20,7 @@ export const useAuthStore = create<AuthState>()(
         setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
         setProfile: (profile) => set({ profile }),
         logout: () => {
-          localStorage.removeItem('accessToken')
-          localStorage.removeItem('profile')
+          clearAllLocalStorage()
           set({ isAuthenticated: false, profile: null })
         },
       }),

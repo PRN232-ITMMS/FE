@@ -46,7 +46,7 @@ const Login = () => {
         if (formError) {
           toast({
             title: 'Đăng nhập thất bại',
-            description: formError.error?.message || 'Email hoặc mật khẩu không chính xác',
+            description: formError.message || 'Email hoặc mật khẩu không chính xác',
             variant: 'destructive',
           })
         }
