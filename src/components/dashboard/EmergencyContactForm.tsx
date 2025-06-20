@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast'
 
 // Validation schema
 const emergencyContactSchema = yup.object({
-  fullName: yup.string().required('Họ tên là bắt buộc'),
+  name: yup.string().required('Họ tên là bắt buộc'),
   relationship: yup.string().required('Mối quan hệ là bắt buộc'),
   phoneNumber: yup
     .string()
@@ -60,7 +60,7 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
   } = useForm<EmergencyContactFormData>({
     resolver: yupResolver(emergencyContactSchema),
     defaultValues: {
-      fullName: '',
+      name: '',
       relationship: '',
       phoneNumber: '',
       email: '',
@@ -76,7 +76,7 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
     mutationFn: (data: EmergencyContactFormData) =>
       emergencyContactsApi.create({
         userId: profile!.id,
-        fullName: data.fullName,
+        name: data.name,
         relationship: data.relationship,
         phoneNumber: data.phoneNumber,
         email: data.email || '',
@@ -152,7 +152,7 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
       await updateMutation.mutateAsync({
         id: editingId,
         data: {
-          fullName: data.fullName,
+          name: data.name,
           relationship: data.relationship,
           phoneNumber: data.phoneNumber,
           email: data.email,
@@ -167,7 +167,7 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
 
   const startEdit = (item: EmergencyContact) => {
     setEditingId(item.id!)
-    setValue('fullName', item.fullName)
+    setValue('name', item.name)
     setValue('relationship', item.relationship)
     setValue('phoneNumber', item.phoneNumber)
     setValue('email', item.email || '')
@@ -197,13 +197,11 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
       <div className='flex items-center justify-between'>
         <div>
           <h3 className='text-lg font-semibold'>Người liên hệ khẩn cấp</h3>
-          <p className='text-sm text-muted-foreground'>
-            Thông tin người thân để liên hệ khi cần thiết
-          </p>
+          <p className='text-sm text-muted-foreground'>Thông tin người thân để liên hệ khi cần thiết</p>
         </div>
         {!isAdding && (
           <Button onClick={() => setIsAdding(true)} size='sm'>
-            <Plus className='h-4 w-4 mr-2' />
+            <Plus className='mr-2 h-4 w-4' />
             Thêm mới
           </Button>
         )}
@@ -211,22 +209,14 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
 
       {/* Add/Edit Form */}
       {isAdding && (
-        <div className='rounded-lg border p-4 space-y-4'>
-          <h4 className='font-medium'>
-            {editingId ? 'Chỉnh sửa người liên hệ' : 'Thêm người liên hệ khẩn cấp'}
-          </h4>
+        <div className='space-y-4 rounded-lg border p-4'>
+          <h4 className='font-medium'>{editingId ? 'Chỉnh sửa người liên hệ' : 'Thêm người liên hệ khẩn cấp'}</h4>
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <div className='space-y-2'>
-                <Label htmlFor='fullName'>Họ và tên *</Label>
-                <Input
-                  id='fullName'
-                  placeholder='Nhập họ tên đầy đủ'
-                  {...register('fullName')}
-                />
-                {errors.fullName && (
-                  <p className='text-sm text-destructive'>{errors.fullName.message}</p>
-                )}
+                <Label htmlFor='name'>Họ và tên *</Label>
+                <Input id='name' placeholder='Nhập họ tên đầy đủ' {...register('name')} />
+                {errors.name && <p className='text-sm text-destructive'>{errors.name.message}</p>}
               </div>
 
               <div className='space-y-2'>
@@ -243,66 +233,41 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.relationship && (
-                  <p className='text-sm text-destructive'>{errors.relationship.message}</p>
-                )}
+                {errors.relationship && <p className='text-sm text-destructive'>{errors.relationship.message}</p>}
               </div>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <div className='space-y-2'>
                 <Label htmlFor='phoneNumber'>Số điện thoại *</Label>
-                <Input
-                  id='phoneNumber'
-                  placeholder='0123 456 789'
-                  {...register('phoneNumber')}
-                />
-                {errors.phoneNumber && (
-                  <p className='text-sm text-destructive'>{errors.phoneNumber.message}</p>
-                )}
+                <Input id='phoneNumber' placeholder='0123 456 789' {...register('phoneNumber')} />
+                {errors.phoneNumber && <p className='text-sm text-destructive'>{errors.phoneNumber.message}</p>}
               </div>
 
               <div className='space-y-2'>
                 <Label htmlFor='email'>Email</Label>
-                <Input
-                  id='email'
-                  type='email'
-                  placeholder='example@email.com'
-                  {...register('email')}
-                />
-                {errors.email && (
-                  <p className='text-sm text-destructive'>{errors.email.message}</p>
-                )}
+                <Input id='email' type='email' placeholder='example@email.com' {...register('email')} />
+                {errors.email && <p className='text-sm text-destructive'>{errors.email.message}</p>}
               </div>
             </div>
 
             <div className='space-y-2'>
               <Label htmlFor='address'>Địa chỉ</Label>
-              <Textarea
-                id='address'
-                placeholder='Nhập địa chỉ liên hệ'
-                rows={2}
-                {...register('address')}
-              />
+              <Textarea id='address' placeholder='Nhập địa chỉ liên hệ' rows={2} {...register('address')} />
             </div>
 
             <div className='flex items-center space-x-2'>
-              <input
-                type='checkbox'
-                id='isPrimary'
-                className='rounded border-gray-300'
-                {...register('isPrimary')}
-              />
+              <input type='checkbox' id='isPrimary' className='rounded border-gray-300' {...register('isPrimary')} />
               <Label htmlFor='isPrimary'>Đây là người liên hệ chính</Label>
             </div>
 
             <div className='flex space-x-2'>
               <Button type='submit' disabled={isSubmitting}>
-                <Save className='h-4 w-4 mr-2' />
+                <Save className='mr-2 h-4 w-4' />
                 {editingId ? 'Cập nhật' : 'Thêm mới'}
               </Button>
               <Button type='button' variant='outline' onClick={cancelEdit}>
-                <X className='h-4 w-4 mr-2' />
+                <X className='mr-2 h-4 w-4' />
                 Hủy
               </Button>
             </div>
@@ -313,8 +278,8 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
       {/* Emergency Contacts List */}
       <div className='space-y-3'>
         {emergencyContacts.length === 0 ? (
-          <div className='text-center py-8 text-muted-foreground'>
-            <UserCheck className='h-12 w-12 mx-auto mb-4 opacity-50' />
+          <div className='py-8 text-center text-muted-foreground'>
+            <UserCheck className='mx-auto mb-4 h-12 w-12 opacity-50' />
             <p>Chưa có thông tin người liên hệ khẩn cấp</p>
             <p className='text-sm'>Nhấn "Thêm mới" để bắt đầu</p>
           </div>
@@ -323,48 +288,39 @@ export const EmergencyContactForm = ({ emergencyContacts, onUpdate }: EmergencyC
             <div key={contact.id} className='rounded-lg border p-4'>
               <div className='flex items-start justify-between'>
                 <div className='flex-1'>
-                  <div className='flex items-center space-x-2 mb-2'>
-                    <h4 className='font-medium'>{contact.fullName}</h4>
+                  <div className='mb-2 flex items-center space-x-2'>
+                    <h4 className='font-medium'>{contact.name}</h4>
                     {contact.isPrimary && (
-                      <span className='px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full'>
-                        Liên hệ chính
-                      </span>
+                      <span className='rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800'>Liên hệ chính</span>
                     )}
                   </div>
-                  
-                  <p className='text-sm text-muted-foreground mb-2'>
-                    {getRelationshipLabel(contact.relationship)}
-                  </p>
-                  
+
+                  <p className='mb-2 text-sm text-muted-foreground'>{getRelationshipLabel(contact.relationship)}</p>
+
                   <div className='space-y-1'>
                     <div className='flex items-center space-x-2 text-sm'>
                       <Phone className='h-4 w-4 text-muted-foreground' />
                       <span>{contact.phoneNumber}</span>
                     </div>
-                    
+
                     {contact.email && (
                       <div className='flex items-center space-x-2 text-sm'>
                         <Mail className='h-4 w-4 text-muted-foreground' />
                         <span>{contact.email}</span>
                       </div>
                     )}
-                    
+
                     {contact.address && (
                       <div className='flex items-start space-x-2 text-sm'>
-                        <MapPin className='h-4 w-4 text-muted-foreground mt-0.5' />
+                        <MapPin className='mt-0.5 h-4 w-4 text-muted-foreground' />
                         <span>{contact.address}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className='flex space-x-1 ml-4'>
-                  <Button
-                    size='sm'
-                    variant='ghost'
-                    onClick={() => startEdit(contact)}
-                    disabled={isAdding}
-                  >
+                <div className='ml-4 flex space-x-1'>
+                  <Button size='sm' variant='ghost' onClick={() => startEdit(contact)} disabled={isAdding}>
                     <Edit3 className='h-4 w-4' />
                   </Button>
                   <Button

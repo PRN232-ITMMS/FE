@@ -50,7 +50,7 @@ const Register = () => {
         if (formError) {
           toast({
             title: 'Đăng ký thất bại',
-            description: formError.error?.message || 'Có lỗi xảy ra khi đăng ký tài khoản',
+            description: formError.message || 'Có lỗi xảy ra khi đăng ký tài khoản',
             variant: 'destructive',
           })
         }
