@@ -2,21 +2,17 @@ import { useEffect } from 'react'
 
 interface UseDocumentTitleProps {
   title: string
-  restoreOnUnmount?: boolean
 }
 
-const useDocumentTitle = ({ title, restoreOnUnmount = false }: UseDocumentTitleProps) => {
+const useDocumentTitle = ({ title }: UseDocumentTitleProps) => {
   useEffect(() => {
-    const originalTitle = document.title
-
+    const previousTitle = document.title
     document.title = title
 
     return () => {
-      if (restoreOnUnmount) {
-        document.title = originalTitle
-      }
+      document.title = previousTitle
     }
-  }, [title, restoreOnUnmount])
+  }, [title])
 }
 
 export default useDocumentTitle

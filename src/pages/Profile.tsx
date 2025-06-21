@@ -1,7 +1,16 @@
 import useDocumentTitle from '@/hooks/useDocumentTitle'
+import { ProfileForm } from '@/components/dashboard/ProfileForm'
+import { useAuthStore } from '@/stores/auth.store'
+import { LoadingPage } from '@/components/ui/loading'
 
 const Profile = () => {
+  const { profile } = useAuthStore()
   useDocumentTitle({ title: 'Thông tin cá nhân - ITM System' })
+
+  if (!profile) {
+    return <LoadingPage message='Đang tải thông tin...' />
+  }
+
   return (
     <div className='bg-muted/50 py-8'>
       <div className='container mx-auto'>
@@ -12,13 +21,13 @@ const Profile = () => {
               <div className='flex items-center space-x-4 border-b pb-6'>
                 <div className='h-12 w-12 flex-shrink-0'>
                   <img
-                    src='https://i.pinimg.com/736x/89/fa/21/89fa2105a7a5d0ef0f0cc7e434f36368.jpg'
+                    src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${profile.email}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
                     alt='avatar'
-                    className='h-full w-full rounded-full object-cover'
+                    className='h-full w-full rounded-full bg-gray-100 object-cover'
                   />
                 </div>
                 <div className='flex-grow'>
-                  <div className='font-semibold text-card-foreground'>xì pót ta</div>
+                  <div className='font-semibold text-card-foreground'>{profile.fullName}</div>
                   <div className='flex items-center text-sm text-muted-foreground'>
                     <svg className='mr-1 h-3 w-3' viewBox='0 0 12 12'>
                       <path
@@ -46,10 +55,10 @@ const Profile = () => {
                     <span className='font-medium'>Tài khoản của tôi</span>
                   </div>
                   <div className='ml-8 space-y-2 text-sm'>
-                    <div className='text-primary'>Hồ sơ</div>
-                    <div className='cursor-pointer text-muted-foreground hover:text-foreground'>Ngân hàng</div>
-                    <div className='cursor-pointer text-muted-foreground hover:text-foreground'>Địa chỉ</div>
+                    <div className='cursor-pointer text-primary'>Hồ sơ</div>
+                    <div className='cursor-pointer text-muted-foreground hover:text-foreground'>Bảo mật</div>
                     <div className='cursor-pointer text-muted-foreground hover:text-foreground'>Đổi mật khẩu</div>
+                    <div className='cursor-pointer text-muted-foreground hover:text-foreground'>Cài đặt</div>
                   </div>
                 </div>
 
@@ -63,7 +72,21 @@ const Profile = () => {
                         d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
                       />
                     </svg>
-                    <span className='font-medium'>Đơn mua</span>
+                    <span className='cursor-pointer font-medium hover:text-foreground'>Lịch sử điều trị</span>
+                  </div>
+                </div>
+
+                <div className='space-y-2'>
+                  <div className='flex items-center text-muted-foreground'>
+                    <svg className='mr-3 h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M8 7V3a4 4 0 118 0v4m-4 6v6m-6-6h12a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2z'
+                      />
+                    </svg>
+                    <span className='cursor-pointer font-medium hover:text-foreground'>Quyền riêng tư</span>
                   </div>
                 </div>
               </div>
@@ -78,117 +101,8 @@ const Profile = () => {
                 <p className='mt-1 text-sm text-muted-foreground'>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
               </div>
 
-              <div className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
-                <form className='mt-6 flex-grow space-y-6 md:mt-0 md:pr-12'>
-                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-4'>
-                    <div className='sm:col-span-1'>
-                      <label className='text-sm font-medium text-foreground'>Email</label>
-                    </div>
-                    <div className='sm:col-span-3'>
-                      <div className='text-sm text-muted-foreground'>huy***@gmail.com</div>
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-4'>
-                    <div className='sm:col-span-1'>
-                      <label className='text-sm font-medium text-foreground'>Tên</label>
-                    </div>
-                    <div className='sm:col-span-3'>
-                      <input
-                        className='w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                        defaultValue='Lê Quang Huy'
-                      />
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-4'>
-                    <div className='sm:col-span-1'>
-                      <label className='text-sm font-medium text-foreground'>Số điện thoại</label>
-                    </div>
-                    <div className='sm:col-span-3'>
-                      <input
-                        className='w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                        placeholder='Nhập số điện thoại'
-                      />
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-4'>
-                    <div className='sm:col-span-1'>
-                      <label className='text-sm font-medium text-foreground'>Địa chỉ</label>
-                    </div>
-                    <div className='sm:col-span-3'>
-                      <input
-                        className='w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                        placeholder='Nhập địa chỉ'
-                      />
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-4'>
-                    <div className='sm:col-span-1'>
-                      <label className='text-sm font-medium text-foreground'>Ngày sinh</label>
-                    </div>
-                    <div className='sm:col-span-3'>
-                      <div className='grid grid-cols-3 gap-2'>
-                        <select className='rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'>
-                          <option>Ngày</option>
-                          {Array.from({ length: 31 }, (_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
-                            </option>
-                          ))}
-                        </select>
-                        <select className='rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'>
-                          <option>Tháng</option>
-                          {Array.from({ length: 12 }, (_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              Tháng {i + 1}
-                            </option>
-                          ))}
-                        </select>
-                        <select className='rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'>
-                          <option>Năm</option>
-                          {Array.from({ length: 2024 - 1900 + 1 }, (_, i) => (
-                            <option key={1900 + i} value={1900 + i}>
-                              {1900 + i}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 gap-4 sm:grid-cols-4'>
-                    <div className='sm:col-span-1'></div>
-                    <div className='sm:col-span-3'>
-                      <button className='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'>
-                        Lưu thay đổi
-                      </button>
-                    </div>
-                  </div>
-                </form>
-
-                {/* Avatar Section */}
-                <div className='flex justify-center md:w-72 md:border-l md:border-border md:pl-6'>
-                  <div className='flex flex-col items-center space-y-4'>
-                    <div className='h-24 w-24'>
-                      <img
-                        src='https://i.pinimg.com/736x/89/fa/21/89fa2105a7a5d0ef0f0cc7e434f36368.jpg'
-                        alt='Profile avatar'
-                        className='h-full w-full rounded-full object-cover'
-                      />
-                    </div>
-                    <input className='hidden' type='file' accept='.jpg,.jpeg,.png' />
-                    <button className='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'>
-                      Chọn ảnh
-                    </button>
-                    <div className='text-center text-xs text-muted-foreground'>
-                      <div>Dung lượng file tối đa 1 MB</div>
-                      <div>Định dạng: .JPEG, .PNG</div>
-                    </div>
-                  </div>
-                </div>
+              <div className='mt-8'>
+                <ProfileForm onUpdate={() => {}} />
               </div>
             </div>
           </div>
