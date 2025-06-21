@@ -38,7 +38,4 @@ export type {
 } from '@/types/medical.type'
 
 // Re-export enums as values
-export {
-  AppointmentStatus,
-  AppointmentType,
-} from '@/types/medical.type'
+export { AppointmentStatus, AppointmentType } from '@/types/medical.type'

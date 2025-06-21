@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth.store'
+import { useRoleCheck } from '@/components/auth/RoleGuard'
 import { Heart, Activity, Calendar, FileText, Bell, Users, BarChart3, Settings, HelpCircle } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -10,6 +11,7 @@ interface SidebarProps {
 
 const Sidebar = ({ className }: SidebarProps) => {
   const { profile } = useAuthStore()
+  const { isCustomer, isDoctor, isAdminOrManager } = useRoleCheck()
   const location = useLocation()
 
   // Check if current route is active
@@ -33,8 +35,8 @@ const Sidebar = ({ className }: SidebarProps) => {
       },
     ]
 
-    if (profile?.role === 1) {
-      // Customer
+    if (isCustomer()) {
+      // Customer navigation
       return [
         ...baseItems,
         {
@@ -58,6 +60,12 @@ const Sidebar = ({ className }: SidebarProps) => {
               label: 'Kết quả xét nghiệm',
               description: 'Xem kết quả và báo cáo',
             },
+            {
+              to: '/doctors',
+              icon: Users,
+              label: 'Đội ngũ bác sĩ',
+              description: 'Tìm hiểu về bác sĩ',
+            },
           ],
         },
         {
@@ -78,21 +86,27 @@ const Sidebar = ({ className }: SidebarProps) => {
           ],
         },
       ]
-    } else if (profile?.role === 2) {
-      // Doctor
+    } else if (isDoctor()) {
+      // Doctor navigation
       return [
-        ...baseItems,
+        ...baseItems.map((section) => ({
+          ...section,
+          items: section.items.map((item) => ({
+            ...item,
+            to: item.to === '/dashboard' ? '/doctor/dashboard' : item.to,
+          })),
+        })),
         {
           section: 'Bệnh nhân',
           items: [
             {
-              to: '/patients',
+              to: '/doctor/patients',
               icon: Users,
               label: 'Danh sách bệnh nhân',
               description: 'Quản lý bệnh nhân',
             },
             {
-              to: '/appointments',
+              to: '/doctor/appointments',
               icon: Calendar,
               label: 'Lịch làm việc',
               description: 'Lịch hẹn và ca trực',
@@ -117,10 +131,16 @@ const Sidebar = ({ className }: SidebarProps) => {
           ],
         },
       ]
-    } else {
-      // Manager/Admin
+    } else if (isAdminOrManager()) {
+      // Manager/Admin navigation
       return [
-        ...baseItems,
+        ...baseItems.map((section) => ({
+          ...section,
+          items: section.items.map((item) => ({
+            ...item,
+            to: item.to === '/dashboard' ? '/admin/dashboard' : item.to,
+          })),
+        })),
         {
           section: 'Quản lý',
           items: [
@@ -159,7 +179,7 @@ const Sidebar = ({ className }: SidebarProps) => {
           section: 'Hệ thống',
           items: [
             {
-              to: '/settings',
+              to: '/admin/settings',
               icon: Settings,
               label: 'Cài đặt',
               description: 'Cấu hình hệ thống',
@@ -168,6 +188,9 @@ const Sidebar = ({ className }: SidebarProps) => {
         },
       ]
     }
+
+    // Fallback for unknown roles
+    return baseItems
   }
 
   const navigationSections = getNavigationItems()
@@ -230,13 +253,15 @@ const Sidebar = ({ className }: SidebarProps) => {
           <div className='min-w-0 flex-1'>
             <div className='truncate text-sm font-medium'>{profile?.fullName}</div>
             <div className='text-xs text-muted-foreground'>
-              {profile?.role === 1
+              {isCustomer()
                 ? 'Bệnh nhân'
-                : profile?.role === 2
+                : isDoctor()
                   ? 'Bác sĩ'
-                  : profile?.role === 3
-                    ? 'Quản lý'
-                    : 'Quản trị viên'}
+                  : isAdminOrManager()
+                    ? profile?.role === 3
+                      ? 'Quản lý'
+                      : 'Quản trị viên'
+                    : 'Người dùng'}
             </div>
           </div>
         </div>
