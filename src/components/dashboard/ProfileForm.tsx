@@ -12,7 +12,9 @@ import { DatePicker } from '@/components/ui/date-picker'
 import { useAuthStore } from '@/stores/auth.store'
 import { useToast } from '@/hooks/use-toast'
 import { User as UserType, Gender } from '@/types/user.type'
-import { profileApi } from '@/apis/profile.api'
+import profileApi, { UpdateProfileDto } from '@/apis/profile.api'
+import ApiErrorHandler from '@/utils/error/apiErrorHandler'
+import { AxiosError } from 'axios'
 
 // Profile form validation schema
 const profileSchema = yup.object({
@@ -56,6 +58,7 @@ export const ProfileForm = ({ onUpdate }: ProfileFormProps) => {
     handleSubmit,
     reset,
     setValue,
+    getValues,
     watch,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileFormData>({
@@ -85,13 +88,14 @@ export const ProfileForm = ({ onUpdate }: ProfileFormProps) => {
     }
   }, [profile, setValue])
 
-  // Auto-save functionality
+  // Auto-save functionality với debounce
   useEffect(() => {
     if (!isEditing || !isDirty) return
 
     const timeoutId = setTimeout(() => {
-      handleSubmit(onSubmit)()
-    }, 2000) // Auto-save after 2 seconds of inactivity
+      const formData = getValues()
+      autoSaveMutation.mutate(formData)
+    }, 3000) // Auto-save after 3 seconds of inactivity
 
     return () => clearTimeout(timeoutId)
   }, [watch(), isEditing, isDirty])
@@ -99,13 +103,14 @@ export const ProfileForm = ({ onUpdate }: ProfileFormProps) => {
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (data: ProfileFormData) => {
-      return await profileApi.updateProfile(profile!.id, {
+      const updateData: UpdateProfileDto = {
         fullName: data.fullName,
         email: data.email,
         phoneNumber: data.phoneNumber,
         gender: data.gender,
-        // Note: dateOfBirth would need to be added to User type
-      })
+      }
+      const response = await profileApi.updateProfile(profile!.id, updateData)
+      return response.data.data
     },
     onSuccess: (updatedUser: UserType) => {
       setProfile(updatedUser)
@@ -117,13 +122,63 @@ export const ProfileForm = ({ onUpdate }: ProfileFormProps) => {
       onUpdate?.()
       queryClient.invalidateQueries({ queryKey: ['profile', profile!.id] })
     },
-    onError: (error) => {
+    onError: (error: AxiosError) => {
       toast({
         title: 'Lỗi',
-        description: 'Không thể cập nhật thông tin cá nhân',
+        description: ApiErrorHandler.handle(error),
         variant: 'destructive',
       })
       console.error('Error updating profile:', error)
+    },
+  })
+
+  // Auto-save mutation (silent)
+  const autoSaveMutation = useMutation({
+    mutationFn: async (data: ProfileFormData) => {
+      const updateData: UpdateProfileDto = {
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        gender: data.gender,
+      }
+      const response = await profileApi.updateProfile(profile!.id, updateData)
+      return response.data.data
+    },
+    onSuccess: () => {
+      console.log('✅ Auto-saved profile successfully')
+    },
+    onError: (error) => {
+      console.error('❌ Auto-save failed:', error)
+      // Show subtle notification for auto-save failure
+      toast({
+        title: 'Auto-save thất bại',
+        description: 'Vui lòng lưu thủ công',
+        variant: 'destructive',
+        duration: 3000,
+      })
+    },
+  })
+
+  // Upload avatar mutation
+  const uploadAvatarMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const response = await profileApi.uploadAvatar(profile!.id, file)
+      return response.data.data
+    },
+    onSuccess: (response) => {
+      setAvatarUrl(response.avatarUrl)
+      toast({
+        title: 'Thành công',
+        description: 'Đã cập nhật avatar',
+      })
+      onUpdate?.()
+    },
+    onError: (error: AxiosError) => {
+      toast({
+        title: 'Lỗi',
+        description: ApiErrorHandler.handle(error),
+        variant: 'destructive',
+      })
     },
   })
 
@@ -168,25 +223,25 @@ export const ProfileForm = ({ onUpdate }: ProfileFormProps) => {
     }
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg']
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp']
     if (!allowedTypes.includes(file.type)) {
       toast({
         title: 'Lỗi',
-        description: 'Chỉ cho phép file JPG, PNG',
+        description: 'Chỉ cho phép file JPG, PNG, WEBP',
         variant: 'destructive',
       })
       return
     }
 
-    // Preview the image
+    // Preview the image locally
     const reader = new FileReader()
     reader.onload = (e) => {
       setAvatarUrl(e.target?.result as string)
     }
     reader.readAsDataURL(file)
 
-    // Upload to server (implement later)
-    // uploadAvatarMutation.mutate(file)
+    // Upload to server
+    uploadAvatarMutation.mutate(file)
   }
 
   const generateNewAvatar = () => {
@@ -323,8 +378,17 @@ export const ProfileForm = ({ onUpdate }: ProfileFormProps) => {
 
             {/* Auto-save indicator */}
             {isEditing && isDirty && (
-              <div className='text-xs text-muted-foreground'>💾 Tự động lưu sau 2 giây không có thay đổi...</div>
+              <div className='flex items-center text-xs text-muted-foreground'>
+                {autoSaveMutation.isPending ? (
+                  <span className='text-blue-600'>💾 Đang tự động lưu...</span>
+                ) : (
+                  <span>💾 Tự động lưu sau 3 giây không có thay đổi...</span>
+                )}
+              </div>
             )}
+
+            {/* Upload status */}
+            {uploadAvatarMutation.isPending && <div className='text-xs text-blue-600'>📤 Đang tải lên avatar...</div>}
           </form>
         </div>
 
