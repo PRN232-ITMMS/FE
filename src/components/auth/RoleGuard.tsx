@@ -8,12 +8,7 @@ interface RoleGuardProps {
   showFallback?: boolean
 }
 
-export const RoleGuard = ({
-  allowedRoles,
-  children,
-  fallback = null,
-  showFallback = true,
-}: RoleGuardProps) => {
+export const RoleGuard = ({ allowedRoles, children, fallback = null, showFallback = true }: RoleGuardProps) => {
   const { profile } = useAuthStore()
 
   // No profile - don't show content
@@ -37,7 +32,7 @@ export const useRoleCheck = () => {
 
   const hasRole = (roles: UserRole | UserRole[]): boolean => {
     if (!profile) return false
-    
+
     const roleArray = Array.isArray(roles) ? roles : [roles]
     return roleArray.includes(profile.role)
   }

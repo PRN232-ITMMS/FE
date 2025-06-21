@@ -386,11 +386,9 @@ export const ProfileForm = ({ onUpdate }: ProfileFormProps) => {
                 )}
               </div>
             )}
-            
+
             {/* Upload status */}
-            {uploadAvatarMutation.isPending && (
-              <div className='text-xs text-blue-600'>📤 Đang tải lên avatar...</div>
-            )}
+            {uploadAvatarMutation.isPending && <div className='text-xs text-blue-600'>📤 Đang tải lên avatar...</div>}
           </form>
         </div>
 

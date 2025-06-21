@@ -31,10 +31,10 @@ export const ProtectedRoute = ({
   // Role-based access control
   if (requiredRoles.length > 0) {
     const hasRequiredRole = requiredRoles.includes(profile.role)
-    
+
     if (!hasRequiredRole) {
       if (showUnauthorized) {
-        return <Navigate to="/unauthorized" replace />
+        return <Navigate to='/unauthorized' replace />
       }
       // Redirect to appropriate dashboard based on user role
       const dashboardPath = getDashboardPath(profile.role)
@@ -67,10 +67,10 @@ export const ProtectedRouteWrapper = ({
   // Role-based access control
   if (requiredRoles.length > 0) {
     const hasRequiredRole = requiredRoles.includes(profile.role)
-    
+
     if (!hasRequiredRole) {
       if (showUnauthorized) {
-        return <Navigate to="/unauthorized" replace />
+        return <Navigate to='/unauthorized' replace />
       }
       // Redirect to appropriate dashboard based on user role
       const dashboardPath = getDashboardPath(profile.role)

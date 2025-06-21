@@ -67,13 +67,13 @@ export class ApiErrorHandler {
     const data = error.response?.data as any
     if (error.response?.status === 422 && data?.errors) {
       const fieldErrors: Record<string, string> = {}
-      
+
       Object.entries(data.errors).forEach(([field, messages]) => {
         if (Array.isArray(messages) && messages.length > 0) {
           fieldErrors[field] = messages[0]
         }
       })
-      
+
       return fieldErrors
     }
     return {}
@@ -116,7 +116,7 @@ export const useApiErrorHandler = () => {
       // Regular error
       return error.message
     }
-    
+
     // Unknown error
     return 'Có lỗi không xác định xảy ra'
   }
