@@ -1,5 +1,6 @@
 // Export all API modules
 export { default as authAPI } from './auth.api'
+export { default as profileApi } from './profile.api'
 export { doctorApi, doctorScheduleApi } from './doctor.api'
 export { appointmentApi } from './appointment.api'
 export { treatmentCycleApi, treatmentServiceApi, treatmentPackageApi } from './treatment.api'
